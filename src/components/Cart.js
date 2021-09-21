@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from "react";
 import formatCurrency from "../util";
-import Fade from 'react-reveal/Fade';
+import Fade from "react-reveal/Fade";
+import { connect } from "react-redux";
+import { removeFromCart } from '../actions/cartActions';
 
-export default class Cart extends Component {
+class Cart extends Component {
   constructor(props) {
     super(props);
     this.state = { email: "", name: "", address: "", showCheckout: false };
@@ -38,25 +40,25 @@ export default class Cart extends Component {
           )}
         </div>
         <div className="cart">
-            <Fade left cascade>
-          <ul className="cart-items">
-            {cartItems.map((item) => (
-              <li key={item._id}>
-                <div>
-                  <img src={item.image} alt={item.title} />
-                </div>
-                <div>
-                  <div>{item.title}</div>
-                  <div className="right">
-                    {formatCurrency(item.price)} * {item.count}{" "}
-                    <button onClick={() => this.props.removeFromCart(item)}>
-                      Remove
-                    </button>
+          <Fade left cascade>
+            <ul className="cart-items">
+              {cartItems.map((item) => (
+                <li key={item._id}>
+                  <div>
+                    <img src={item.image} alt={item.title} />
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <div>
+                    <div>{item.title}</div>
+                    <div className="right">
+                      {formatCurrency(item.price)} * {item.count}{" "}
+                      <button onClick={() => this.props.removeFromCart(item)}>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </Fade>
         </div>
         <div>
@@ -82,43 +84,43 @@ export default class Cart extends Component {
           )}
           {this.state.showCheckout && (
             <div className="cart">
-                <Fade right cascade>
-              <form onSubmit={this.createOrder}>
-                <ul className="form-container">
-                  <li>
-                    <label> Email </label>
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      onChange={this.handleInput}
-                    />
-                  </li>
-                  <li>
-                    <label> Name </label>
-                    <input
-                      name="name"
-                      type="text"
-                      required
-                      onChange={this.handleInput}
-                    />
-                  </li>
-                  <li>
-                    <label> Address </label>
-                    <input
-                      name="address"
-                      type="text"
-                      required
-                      onChange={this.handleInput}
-                    />
-                  </li>
-                  <li>
-                    <button className="button primary" type="submit">
-                      Checkout
-                    </button>
-                  </li>
-                </ul>
-              </form>
+              <Fade right cascade>
+                <form onSubmit={this.createOrder}>
+                  <ul className="form-container">
+                    <li>
+                      <label> Email </label>
+                      <input
+                        name="email"
+                        type="email"
+                        required
+                        onChange={this.handleInput}
+                      />
+                    </li>
+                    <li>
+                      <label> Name </label>
+                      <input
+                        name="name"
+                        type="text"
+                        required
+                        onChange={this.handleInput}
+                      />
+                    </li>
+                    <li>
+                      <label> Address </label>
+                      <input
+                        name="address"
+                        type="text"
+                        required
+                        onChange={this.handleInput}
+                      />
+                    </li>
+                    <li>
+                      <button className="button primary" type="submit">
+                        Checkout
+                      </button>
+                    </li>
+                  </ul>
+                </form>
               </Fade>
             </div>
           )}
@@ -127,3 +129,8 @@ export default class Cart extends Component {
     );
   }
 }
+
+export default connect(
+  (state) => ({ cartItems: state.cart.cartItems }),
+  { removeFromCart }
+)(Cart);
